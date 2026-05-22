@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validação de Treinamento</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background:#f2f2f2;
+            margin:0;
+            padding:20px;
+        }
+
+        .page{
+            width:900px;
+            margin:auto;
+            background:#fff;
+            border:1px solid #999;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        td, th{
+            border:1px solid #7d7d7d;
+            padding:6px;
+            font-size:14px;
+        }
+
+        .header-title{
+            text-align:center;
+            font-size:28px;
+            font-weight:bold;
+        }
+
+        .header-sub{
+            text-align:center;
+            font-size:22px;
+            font-weight:bold;
+            padding:15px 0;
+        }
+
+        .blue{
+            background:#69b6db;
+            color:#fff;
+            font-weight:bold;
+            text-align:center;
+            font-size:22px;
+        }
+
+        .info{
+            font-size:13px;
+            line-height:1.8;
+        }
+
+        input[type=text]{
+            border:none;
+            width:100%;
+            font-size:14px;
+            outline:none;
+        }
+
+        .options{
+            display:flex;
+            gap:25px;
+            justify-content:center;
+            flex-wrap:wrap;
+            padding:10px 0;
+        }
+
+        .comments{
+            height:80px;
+        }
+
+        .signature-area{
+            margin-top:80px;
+            display:flex;
+            justify-content:space-around;
+            padding-bottom:40px;
+        }
+
+        .signature{
+            width:300px;
+            text-align:center;
+        }
+
+        .line{
+            border-top:1px solid #000;
+            margin-top:60px;
+            padding-top:5px;
+        }
+
+        .footer{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            font-size:12px;
+            padding:15px;
+            color:#333;
+        }
+
+        .btn{
+            width:100%;
+            background:#1f3c88;
+            color:#fff;
+            border:none;
+            padding:15px;
+            font-size:16px;
+            cursor:pointer;
+        }
+
+        @media print{
+
+            body{
+                background:#fff;
+                padding:0;
+            }
+
+            .btn{
+                display:none;
+            }
+
+            .page{
+                border:none;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+    <table>
+
+        <tr>
+
+            <td width="18%" style="text-align:center;">
+                <strong>SystemGlass</strong>
+            </td>
+
+            <td width="52%">
+
+                <div class="header-title">
+                    VALIDAÇÃO DE TREINAMENTO
+                </div>
+
+                <div class="header-sub">
+                    FORMULÁRIO
+                </div>
+
+            </td>
+
+            <td width="30%" class="info">
+
+                <strong>FRIMPXXX</strong><br>
+                Setor: Implantação<br>
+                Revisão: 01<br>
+                Emissão: ___/___/____<br>
+                Venc: ___/___/____
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <table>
+
+        <tr class="blue">
+            <td colspan="2">
+                Identificação do Cliente
+            </td>
+        </tr>
+
+        <tr>
+
+            <td width="50%">
+                Empresa:
+                <input type="text">
+            </td>
+
+            <td width="50%">
+                Módulo:
+                <input type="text">
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+                Usuário:
+                <input type="text">
+            </td>
+
+            <td>
+                Implantador:
+                <input type="text">
+            </td>
+
+        </tr>
+
+    </table>
+
+    <table>
+
+        <tr class="blue">
+            <td>
+                Avalie o Implantador
+            </td>
+        </tr>
+
+        <tr>
+
+            <td>
+
+                Nível de conhecimento:
+
+                <div class="options">
+
+                    <label><input type="checkbox"> Excelente</label>
+                    <label><input type="checkbox"> Bom</label>
+                    <label><input type="checkbox"> Regular</label>
+                    <label><input type="checkbox"> Ruim</label>
+                    <label><input type="checkbox"> Péssimo</label>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+
+                Agilidade:
+
+                <div class="options">
+
+                    <label><input type="checkbox"> Excelente</label>
+                    <label><input type="checkbox"> Bom</label>
+                    <label><input type="checkbox"> Regular</label>
+                    <label><input type="checkbox"> Ruim</label>
+                    <label><input type="checkbox"> Péssimo</label>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+
+                Clareza nas explicações:
+
+                <div class="options">
+
+                    <label><input type="checkbox"> Excelente</label>
+                    <label><input type="checkbox"> Bom</label>
+                    <label><input type="checkbox"> Regular</label>
+                    <label><input type="checkbox"> Ruim</label>
+                    <label><input type="checkbox"> Péssimo</label>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+
+                Educação e cordialidade:
+
+                <div class="options">
+
+                    <label><input type="checkbox"> Excelente</label>
+                    <label><input type="checkbox"> Bom</label>
+                    <label><input type="checkbox"> Regular</label>
+                    <label><input type="checkbox"> Ruim</label>
+                    <label><input type="checkbox"> Péssimo</label>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <table>
+
+        <tr class="blue">
+            <td>
+                Avalie o Treinamento
+            </td>
+        </tr>
+
+        <tr>
+
+            <td>
+
+                A explicação de como executar as atividades no sistema foi:
+
+                <div class="options">
+
+                    <label><input type="checkbox"> Excelente</label>
+                    <label><input type="checkbox"> Bom</label>
+                    <label><input type="checkbox"> Regular</label>
+                    <label><input type="checkbox"> Ruim</label>
+                    <label><input type="checkbox"> Péssimo</label>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+
+                A explicação sobre o processo em que você está envolvido foi:
+
+                <div class="options">
+
+                    <label><input type="checkbox"> Excelente</label>
+                    <label><input type="checkbox"> Bom</label>
+                    <label><input type="checkbox"> Regular</label>
+                    <label><input type="checkbox"> Ruim</label>
+                    <label><input type="checkbox"> Péssimo</label>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <table>
+
+        <tr class="blue">
+            <td>
+                Avalie o Software
+            </td>
+        </tr>
+
+        <tr>
+
+            <td>
+
+                Você se considera apto a executar suas atividades utilizando o sistema?
+
+                <div class="options">
+
+                    <label><input type="checkbox"> Sim, totalmente</label>
+                    <label><input type="checkbox"> Sim</label>
+                    <label><input type="checkbox"> Parcialmente</label>
+                    <label><input type="checkbox"> Não</label>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+
+                O sistema atende às necessidades do seu setor?
+
+                <div class="options">
+
+                    <label><input type="checkbox"> Sim, totalmente</label>
+                    <label><input type="checkbox"> Sim</label>
+                    <label><input type="checkbox"> Parcialmente</label>
+                    <label><input type="checkbox"> Não</label>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <table>
+
+        <tr class="blue">
+            <td>
+                Comentários
+            </td>
+        </tr>
+
+        <tr>
+            <td class="comments"></td>
+        </tr>
+
+        <tr>
+            <td class="comments"></td>
+        </tr>
+
+    </table>
+
+    <div class="signature-area">
+
+        <div class="signature">
+
+            <div class="line">
+                Assinatura Cliente
+            </div>
+
+        </div>
+
+        <div class="signature">
+
+            <div class="line">
+                Assinatura Analista de Implantação
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+
+        Este documento é de responsabilidade da SystemGlass. Todos os direitos reservados.
+
+    </div>
+
+</div>
+
+<button class="btn" onclick="window.print()">
+    Imprimir / Salvar PDF
+</button>
+
+</body>
+
+</html>
