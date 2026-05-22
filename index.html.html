@@ -1,0 +1,326 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d0f14; }
+  .dash { background: #0d0f14; color: #e2e8f0; font-family: 'JetBrains Mono', 'Fira Code', monospace; padding: 16px; min-height: 100vh; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #1e2535; }
+  .topbar h1 { font-size: 15px; font-weight: 500; letter-spacing: 0.08em; color: #94a3b8; text-transform: uppercase; }
+  .period-pills { display: flex; gap: 6px; }
+  .pill { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1px solid #2a3347; background: transparent; color: #64748b; cursor: pointer; transition: all .15s; }
+  .pill.active { background: #1e3a5f; border-color: #3b82f6; color: #93c5fd; }
+  .section-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #475569; margin: 18px 0 8px; }
+  .cards-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 6px; }
+  .card { background: #131720; border: 1px solid #1e2535; border-radius: 10px; padding: 14px 16px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .card.green::before { background: #22c55e; }
+  .card.red::before { background: #ef4444; }
+  .card.blue::before { background: #3b82f6; }
+  .card.amber::before { background: #f59e0b; }
+  .card-icon { font-size: 18px; margin-bottom: 6px; }
+  .card-label { font-size: 10px; color: #64748b; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; line-height: 1.4; }
+  .card-value { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
+  .card-value.pos { color: #4ade80; }
+  .card-value.neg { color: #f87171; }
+  .card-value.neutral { color: #93c5fd; }
+  .card-value.warn { color: #fbbf24; }
+  .card-sub { font-size: 10px; color: #475569; margin-top: 4px; }
+  .card-sub .up { color: #4ade80; }
+  .card-sub .dn { color: #f87171; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .panel { background: #131720; border: 1px solid #1e2535; border-radius: 10px; padding: 14px 16px; }
+  .panel-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .panel-title span { color: #94a3b8; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .bar-name { font-size: 11px; color: #94a3b8; width: 70px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track { flex: 1; height: 6px; background: #1e2535; border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bar-fill.green { background: #22c55e; }
+  .bar-fill.red { background: #ef4444; }
+  .bar-fill.blue { background: #3b82f6; }
+  .bar-fill.amber { background: #f59e0b; }
+  .bar-val { font-size: 11px; width: 68px; text-align: right; }
+  .bar-val.pos { color: #4ade80; }
+  .bar-val.neg { color: #f87171; }
+  .cashflow-row { display: flex; align-items: flex-end; gap: 4px; height: 100px; margin-bottom: 8px; }
+  .cf-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .cf-bar-wrap { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; }
+  .cf-in { background: #22c55e; border-radius: 2px 2px 0 0; width: 100%; }
+  .cf-out { background: #ef4444; border-radius: 2px 2px 0 0; width: 100%; margin-top: 2px; }
+  .cf-prev { background: #3b82f6; opacity: 0.55; border-radius: 2px 2px 0 0; width: 100%; border: 1px dashed #3b82f6; }
+  .cf-label { font-size: 9px; color: #475569; text-align: center; margin-top: 2px; }
+  .legend-row { display: flex; gap: 12px; margin-top: 6px; }
+  .legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #64748b; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+  .receivables-list { display: flex; flex-direction: column; gap: 6px; }
+  .rec-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; background: #0d0f14; border-radius: 6px; border: 1px solid #1e2535; }
+  .rec-type { font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 6px; }
+  .rec-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .rec-val { font-size: 12px; font-weight: 500; }
+  .rec-val.pos { color: #4ade80; }
+  .rec-val.neg { color: #f87171; }
+  .alert-bar { background: #1c1208; border: 1px solid #78350f; border-radius: 8px; padding: 9px 14px; display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 11px; color: #fbbf24; }
+  .divider { height: 1px; background: #1e2535; margin: 14px 0; }
+  .status-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .status-badge { font-size: 10px; padding: 3px 9px; border-radius: 20px; }
+  .badge-green { background: #052e16; color: #4ade80; border: 1px solid #166534; }
+  .badge-red { background: #1c0a0a; color: #f87171; border: 1px solid #7f1d1d; }
+  .badge-blue { background: #0c1a2e; color: #93c5fd; border: 1px solid #1e3a5f; }
+  .badge-amber { background: #1c1208; color: #fbbf24; border: 1px solid #78350f; }
+  .big-number { font-size: 26px; font-weight: 500; letter-spacing: -0.03em; }
+  .pix-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #1a2030; font-size: 11px; }
+  .pix-row:last-child { border-bottom: none; }
+  .pix-label { color: #64748b; }
+  .pix-val.pos { color: #4ade80; }
+  .pix-val.neg { color: #f87171; }
+  .pix-val.neu { color: #93c5fd; }
+  .gauge-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 4px; }
+  .gauge-arc { position: relative; width: 90px; height: 48px; overflow: hidden; }
+  .gauge-text { font-size: 16px; font-weight: 500; color: #4ade80; margin-top: -4px; }
+  .gauge-sub { font-size: 9px; color: #475569; }
+  .mini-sparkline { height: 32px; display: flex; align-items: flex-end; gap: 2px; margin-top: 6px; }
+  .spark-bar { border-radius: 2px 2px 0 0; min-height: 4px; }
+  .overdue-num { font-size: 28px; font-weight: 500; color: #f87171; }
+  .tag-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+</style>
+
+<div class="dash">
+  <h2 class="sr-only">Esboço de dashboard financeiro com visão consolidada de recebimentos, inadimplência e fluxo de caixa</h2>
+
+  <div class="topbar">
+    <div>
+      <div class="section-label" style="margin:0 0 2px;">Sistema de Gestão</div>
+      <h1 style="font-size:16px;color:#e2e8f0;text-transform:none;letter-spacing:0;">Dashboard Financeiro</h1>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="period-pills">
+        <div class="pill">Hoje</div>
+        <div class="pill active">Semana</div>
+        <div class="pill">Quinzena</div>
+        <div class="pill">Mês</div>
+        <div class="pill">Personalizado</div>
+      </div>
+      <div style="font-size:11px;color:#475569;padding:4px 10px;border:1px solid #1e2535;border-radius:6px;">
+        <i class="ti ti-calendar" aria-hidden="true"></i> 19/05 – 25/05/2025
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 1: RECEITAS DA SEMANA -->
+  <div class="section-label">Recebimentos da semana (realizado)</div>
+  <div class="cards-row">
+    <div class="card green">
+      <div class="card-icon"><i class="ti ti-circle-check" style="color:#22c55e" aria-hidden="true"></i></div>
+      <div class="card-label">Total Recebido<br>no Período</div>
+      <div class="card-value pos">R$ 284.750</div>
+      <div class="card-sub"><span class="up">▲ 12%</span> vs semana anterior</div>
+    </div>
+    <div class="card green">
+      <div class="card-icon"><i class="ti ti-coins" style="color:#4ade80" aria-hidden="true"></i></div>
+      <div class="card-label">Disponível<br>(Caixa + Banco)</div>
+      <div class="card-value pos">R$ 198.320</div>
+      <div class="card-sub" style="color:#22c55e;font-size:10px;">✓ Disponível p/ empresa</div>
+    </div>
+    <div class="card blue">
+      <div class="card-icon"><i class="ti ti-building-bank" style="color:#3b82f6" aria-hidden="true"></i></div>
+      <div class="card-label">A Receber<br>(em aberto)</div>
+      <div class="card-value neutral">R$ 421.000</div>
+      <div class="card-sub">Vencimento futuro</div>
+    </div>
+    <div class="card red">
+      <div class="card-icon"><i class="ti ti-alert-triangle" style="color:#ef4444" aria-hidden="true"></i></div>
+      <div class="card-label">Não Recebido<br>(vencido no período)</div>
+      <div class="card-value neg">R$ 67.300</div>
+      <div class="card-sub"><span class="dn">▲ 8%</span> inadimplência</div>
+    </div>
+  </div>
+
+  <!-- LINHA 2: FORMAS DE RECEBIMENTO + INADIMPLÊNCIA -->
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Recebimentos por Forma <span>semana</span></div>
+      <div class="receivables-list">
+        <div class="bar-row">
+          <div class="bar-name">PIX</div>
+          <div class="bar-track"><div class="bar-fill green" style="width:78%"></div></div>
+          <div class="bar-val pos">R$ 112.400</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">Boleto</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:52%"></div></div>
+          <div class="bar-val pos">R$ 74.800</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">Transferência</div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:35%"></div></div>
+          <div class="bar-val pos">R$ 51.200</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">Cheque</div>
+          <div class="bar-track"><div class="bar-fill amber" style="width:20%"></div></div>
+          <div class="bar-val warn">R$ 28.900</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">Dinheiro</div>
+          <div class="bar-track"><div class="bar-fill amber" style="width:12%"></div></div>
+          <div class="bar-val warn">R$ 17.450</div>
+        </div>
+        <div class="divider" style="margin:6px 0;"></div>
+        <div class="bar-row">
+          <div class="bar-name" style="font-weight:500;color:#e2e8f0;">Total</div>
+          <div class="bar-track"></div>
+          <div class="bar-val pos" style="font-size:13px;font-weight:500;">R$ 284.750</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Inadimplência & Pendências <span>período</span></div>
+      <div style="margin-bottom:12px;">
+        <div class="card-label">Não recebido (vencido)</div>
+        <div class="overdue-num">R$ 67.300</div>
+        <div class="tag-row">
+          <div class="status-badge badge-red">23 títulos</div>
+          <div class="status-badge badge-amber">8 clientes</div>
+        </div>
+      </div>
+      <div class="pix-row"><div class="pix-label">0–7 dias em atraso</div><div class="pix-val neg">R$ 31.200</div></div>
+      <div class="pix-row"><div class="pix-label">8–15 dias em atraso</div><div class="pix-val neg">R$ 21.400</div></div>
+      <div class="pix-row"><div class="pix-label">16–30 dias em atraso</div><div class="pix-val neg">R$ 9.700</div></div>
+      <div class="pix-row"><div class="pix-label">+30 dias (risco)</div><div class="pix-val neg" style="color:#dc2626;font-weight:500;">R$ 5.000</div></div>
+      <div class="alert-bar" style="margin-top:10px;">
+        <i class="ti ti-alert-circle" aria-hidden="true"></i>
+        2 títulos com vencimento hoje ainda em aberto
+      </div>
+    </div>
+  </div>
+
+  <!-- LINHA 3: FLUXO DE CAIXA -->
+  <div class="section-label" style="margin-top:18px;">Fluxo de Caixa — Realizado × Previsto</div>
+  <div class="panel" style="margin-bottom:10px;">
+    <div class="panel-title">Fluxo Semanal <span style="font-size:10px;">Barras sólidas = realizado · Barras tracejadas = previsto</span></div>
+    <div style="display:flex;gap:6px;height:110px;align-items:flex-end;margin-bottom:4px;">
+      <!-- Segunda -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:2px;">
+          <div style="height:52px;background:#22c55e;border-radius:2px 2px 0 0;width:100%;"></div>
+          <div style="height:28px;background:#ef4444;border-radius:2px 2px 0 0;width:100%;"></div>
+        </div>
+        <div class="cf-label">Seg</div>
+      </div>
+      <!-- Terça -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:2px;">
+          <div style="height:62px;background:#22c55e;border-radius:2px 2px 0 0;width:100%;"></div>
+          <div style="height:34px;background:#ef4444;border-radius:2px 2px 0 0;width:100%;"></div>
+        </div>
+        <div class="cf-label">Ter</div>
+      </div>
+      <!-- Quarta -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:2px;">
+          <div style="height:44px;background:#22c55e;border-radius:2px 2px 0 0;width:100%;"></div>
+          <div style="height:38px;background:#ef4444;border-radius:2px 2px 0 0;width:100%;"></div>
+        </div>
+        <div class="cf-label">Qua</div>
+      </div>
+      <!-- Quinta -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:2px;">
+          <div style="height:70px;background:#22c55e;border-radius:2px 2px 0 0;width:100%;"></div>
+          <div style="height:22px;background:#ef4444;border-radius:2px 2px 0 0;width:100%;"></div>
+        </div>
+        <div class="cf-label">Qui</div>
+      </div>
+      <!-- Sexta -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:2px;">
+          <div style="height:56px;background:#22c55e;border-radius:2px 2px 0 0;width:100%;"></div>
+          <div style="height:30px;background:#ef4444;border-radius:2px 2px 0 0;width:100%;"></div>
+        </div>
+        <div class="cf-label">Sex</div>
+      </div>
+      <!-- Sáb (previsto) -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:2px;">
+          <div style="height:48px;background:transparent;border:1px dashed #22c55e;border-radius:2px 2px 0 0;width:100%;"></div>
+          <div style="height:20px;background:transparent;border:1px dashed #ef4444;border-radius:2px 2px 0 0;width:100%;"></div>
+        </div>
+        <div class="cf-label" style="color:#3b82f6;">Sáb</div>
+      </div>
+      <!-- Dom (previsto) -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;flex:1;gap:2px;">
+          <div style="height:32px;background:transparent;border:1px dashed #22c55e;border-radius:2px 2px 0 0;width:100%;"></div>
+          <div style="height:18px;background:transparent;border:1px dashed #ef4444;border-radius:2px 2px 0 0;width:100%;"></div>
+        </div>
+        <div class="cf-label" style="color:#3b82f6;">Dom</div>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div>Entradas realizadas</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Saídas realizadas</div>
+      <div class="legend-item"><div class="legend-dot" style="background:transparent;border:1px dashed #22c55e;"></div>Previsto entrada</div>
+      <div class="legend-item"><div class="legend-dot" style="background:transparent;border:1px dashed #ef4444;"></div>Previsto saída</div>
+    </div>
+    <div class="divider"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:2px;">
+      <div><div class="card-label">Entradas (realiz.)</div><div style="font-size:15px;font-weight:500;color:#4ade80;">R$ 284.750</div></div>
+      <div><div class="card-label">Saídas (realiz.)</div><div style="font-size:15px;font-weight:500;color:#f87171;">R$ 152.300</div></div>
+      <div><div class="card-label">Saldo Período</div><div style="font-size:15px;font-weight:500;color:#4ade80;">R$ 132.450</div></div>
+      <div><div class="card-label">Saldo Previsto (semana)</div><div style="font-size:15px;font-weight:500;color:#93c5fd;">R$ 148.000</div></div>
+    </div>
+  </div>
+
+  <!-- LINHA 4: CONTAS A PAGAR + A RECEBER CONSOLIDADO -->
+  <div class="three-col">
+    <div class="panel">
+      <div class="panel-title">Contas a Pagar <span>período</span></div>
+      <div class="card-label">Total Previsto p/ Pagar</div>
+      <div class="big-number" style="color:#f87171;">R$ 198.400</div>
+      <div class="tag-row"><div class="status-badge badge-red">47 títulos</div></div>
+      <div class="pix-row" style="margin-top:8px;"><div class="pix-label">Já pago</div><div class="pix-val neg">R$ 152.300</div></div>
+      <div class="pix-row"><div class="pix-label">A pagar (em aberto)</div><div class="pix-val neg">R$ 31.200</div></div>
+      <div class="pix-row"><div class="pix-label">Vencido não pago</div><div class="pix-val" style="color:#dc2626;font-weight:500;">R$ 14.900</div></div>
+      <div class="alert-bar" style="margin-top:8px;">
+        <i class="ti ti-alert-circle" aria-hidden="true"></i>
+        R$ 14.900 em atraso — atenção!
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Contas a Receber <span>próx. 30 dias</span></div>
+      <div class="card-label">Total Previsto Receber</div>
+      <div class="big-number" style="color:#4ade80;">R$ 421.000</div>
+      <div class="tag-row"><div class="status-badge badge-green">68 títulos</div></div>
+      <div class="pix-row" style="margin-top:8px;"><div class="pix-label">Próx. 7 dias</div><div class="pix-val pos">R$ 138.000</div></div>
+      <div class="pix-row"><div class="pix-label">8–15 dias</div><div class="pix-val pos">R$ 112.400</div></div>
+      <div class="pix-row"><div class="pix-label">16–30 dias</div><div class="pix-val neu">R$ 170.600</div></div>
+      <div class="divider"></div>
+      <div class="pix-row"><div class="pix-label" style="color:#f87171;">Vencidos (atraso)</div><div class="pix-val neg">R$ 67.300</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Resultado Consolidado <span>semana</span></div>
+      <div class="card-label">Saldo Projetado (mês)</div>
+      <div class="big-number" style="color:#4ade80;">R$ 284.600</div>
+      <div class="divider"></div>
+      <div class="pix-row"><div class="pix-label">Receita prevista mês</div><div class="pix-val pos">R$ 1.240.000</div></div>
+      <div class="pix-row"><div class="pix-label">Custo previsto mês</div><div class="pix-val neg">R$ 955.400</div></div>
+      <div class="pix-row"><div class="pix-label">Margem bruta</div><div class="pix-val pos">23%</div></div>
+      <div class="divider"></div>
+      <div style="margin-top:6px;">
+        <div class="card-label">Status geral</div>
+        <div class="status-row">
+          <div class="status-badge badge-green">Saldo Positivo</div>
+          <div class="status-badge badge-amber">Inadimpl. monitorada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;padding:10px 14px;background:#0a0f1c;border:1px dashed #1e3a5f;border-radius:8px;font-size:10px;color:#3b82f6;letter-spacing:0.06em;">
+    <i class="ti ti-info-circle" style="font-size:13px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>
+    ESBOÇO DE TELA — para apresentação ao time de desenvolvimento. Dados são ilustrativos.
+  </div>
+</div>
